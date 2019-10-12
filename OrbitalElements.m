@@ -40,9 +40,9 @@ end
 
 %true anomaly
 v_r = dot(v,r)/norm(r);  %radial velocity
-if v_r > 0  %if v_r > 0, theta<180? (moving away)
+if v_r > 0  %if v_r > 0, theta<180 (moving away)
     OE.theta = acosd(dot(OE.e,r)/(norm(OE.e)*norm(r)));
-else        %if v_r < 0, theta>180? (coming back)
+else        %if v_r < 0, theta>180 (coming back)
     OE.theta = 360 - acosd(dot(OE.e,r)/(norm(OE.e)*norm(r)));
 end
 
