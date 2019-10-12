@@ -1,2 +1,2 @@
 # orbital_matlabtools
-Matlab functions for Orbital Mechanics
+MATLAB functions for Orbital Mechanics
