@@ -127,12 +127,12 @@ disp('Constructing manifolds...')
 Yu = eigvec1(:,1)/norm(eigvec1(:,1));
 Ys = eigvec1(:,2)/norm(eigvec1(:,2));
 % perturbation of state
-epsobj = 1e-5;  % eps objective
+epsobj = 1e-6;  % eps objective
 % eps factor for linear approximated initial guess
 eigvec_average = (abs(Yu(1,1)) + abs(Yu(3,1)))/2;
 eps = epsobj/eigvec_average;
 % decide number of manifolds to make
-num_manif = 60;
+num_manif = 50;
 % create manifolds
 for i = 1:num_manif
     % obtain num_manif points along the halo
@@ -158,9 +158,10 @@ for i = 1:num_manif
     manif(i).X0s_m = manif(i).X0 - eps*manif(i).Ys;
     % propagate stable manifolds (backward in time)
     [rr_maniftmp_s_p, vv_maniftmp_s_p, time_maniftmp_s_p] = ...
-        propagate_manifold_ode45(mu,manif(i).X0s_p,-4*Thalo1,'x',-0.4);
+        propagate_manifold_poincare(mu,manif(i).X0s_p,-4*Thalo1,'U1','U3');
     [rr_maniftmp_s_m, vv_maniftmp_s_m, time_maniftmp_s_m] = ...
-        propagate_manifold_ode45(mu,manif(i).X0s_m,-4*Thalo1,'x',-0.4);
+        propagate_manifold_poincare(mu,manif(i).X0s_m,-4*Thalo1,'U1','U3');
+    
     % store
     manif(i).rr_s_p = rr_maniftmp_s_p;
     manif(i).vv_s_p = vv_maniftmp_s_p;
@@ -172,13 +173,13 @@ for i = 1:num_manif
     for j = 1:length(rr_maniftmp_s_p)
         manif(i).rr_manif_norm_s_p(j) = norm(rr_maniftmp_s_p(j,:));
     end
-    for j = 1:length(rr_maniftmp_s_m)
-        manif(i).rr_manif_norm_s_m(j) = norm(rr_maniftmp_s_m(j,:));
-    end
+%     for j = 1:length(rr_maniftmp_s_m)
+%         manif(i).rr_manif_norm_s_m(j) = norm(rr_maniftmp_s_m(j,:));
+%     end
     % (pls family)
     [manif(i).rr_min_s_p, manif(i).rr_minIndx_s_p] = min(manif(i).rr_manif_norm_s_p);
     % (min family)
-    [manif(i).rr_min_s_m, manif(i).rr_minIndx_s_m] = min(manif(i).rr_manif_norm_s_m);
+%     [manif(i).rr_min_s_m, manif(i).rr_minIndx_s_m] = min(manif(i).rr_manif_norm_s_m);
     
     % angular momentum along the manifold
     % (pls family)
@@ -188,38 +189,47 @@ for i = 1:num_manif
     [manif(i).h_s_m , manif(i).h_norm_s_m] = ...
         angularMomentum(rr_maniftmp_s_m, vv_maniftmp_s_m);
     
+    % inclination along the manifold
+    manif(i).inc_arr = inclinationArray(manif(i).h_s_p);
+    
     % Jacobi constant
     [manif(i).C_p, ~] = jacobiConst(mu, rr_maniftmp_s_p, vv_maniftmp_s_p);
     [manif(i).C_m, ~] = jacobiConst(mu, rr_maniftmp_s_m, vv_maniftmp_s_m);
     
     % plot of h_norm and C of each manifold
     figure(5)
-    subplot(4,1,1)
+    subplot(5,1,1)
     plot(manif(i).time_s_p, manif(i).h_norm_s_p, '-m');
     hold on;
     grid on;
     xlabel('time'); ylabel('h (manifold)');
-    subplot(4,1,2)
+    subplot(5,1,2)
     plot(manif(i).time_s_p, manif(i).C_p, '-m');
     hold on;
     grid on;
     xlabel('time'); ylabel('Jacobi Constant C');
-    subplot(4,1,3)
+    subplot(5,1,3)
     plot(manif(i).time_s_p, -0.5*manif(i).C_p, '-m');
     hold on;
     grid on;
     xlabel('time'); ylabel('Energy E');
-    subplot(4,1,4)
+    subplot(5,1,4)
     plot(manif(i).time_s_p, manif(i).rr_manif_norm_s_p, '-m');
     hold on;
     grid on;
     xlabel('time'); ylabel('r from m1');
+    subplot(5,1,5)
+    plot(manif(i).time_s_p, manif(i).inc_arr, '-m');
+    hold on;
+    grid on;
+    xlabel('time'); ylabel('inclination [deg]');
    
     % append to XY plot of manifolds
     figure(101)
     hold on
     % plot manifolds
     plot(manif(i).rr_s_p(:,1),manif(i).rr_s_p(:,2),'-m');
+    plot(manif(i).rr_s_m(:,1),manif(i).rr_s_m(:,2),'-g');
     % plot cloest approach of manifolds
     plot(manif(i).rr_s_p(manif(i).rr_minIndx_s_p,1),manif(i).rr_s_p(manif(i).rr_minIndx_s_p,2),'xb');
     grid on;
@@ -229,6 +239,7 @@ for i = 1:num_manif
     figure(102)
     % plot manifolds
     plot3(manif(i).rr_s_p(:,1),manif(i).rr_s_p(:,2),manif(i).rr_s_p(:,3),'-m');
+    plot3(manif(i).rr_s_m(:,1),manif(i).rr_s_m(:,2),manif(i).rr_s_m(:,3),'-g');
     hold on
     % plot cloest approach of manifolds
     plot3(manif(i).rr_s_p(manif(i).rr_minIndx_s_p,1),manif(i).rr_s_p(manif(i).rr_minIndx_s_p,2),...
