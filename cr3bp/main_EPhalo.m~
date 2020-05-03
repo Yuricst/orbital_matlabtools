@@ -33,7 +33,7 @@ grid on;
 xlabel('x'); ylabel('y'); zlabel('z');
 title(['Earth-Moon Halo, Az = ',num2str(Az_km),' [km]']);
 
-% plot Halo with primaries and L point
+% plot Halo
 figure(101)
 hold on
 plot(-mu,0,'ob');
@@ -41,12 +41,10 @@ plot(1-mu,0,'ok');
 plot(LP(lp,1),LP(lp,2),'xk');
 plot(rr_halo(:,1), rr_halo(:,2),'-b','LineWidth',1.5);
 
-[Xsphere, Ysphere, Zsphere] = sphere(20);
-
 figure(102)
-mesh(6378*Xsphere/Lstar-mu, 6378*Ysphere/Lstar, 6378*Zsphere/Lstar, 'edgecolor', 'b');
+mesh()
 hold on
-mesh(1737*Xsphere/Lstar+1-mu, 1737*Ysphere/Lstar, 1737*Zsphere/Lstar, 'edgecolor', 'k');
+mesh()
 plot3(LP(lp,1),LP(lp,2),LP(lp,3),'xk');
 plot3(rr_halo(:,1), rr_halo(:,2), rr_halo(:,3),'-b','LineWidth',2);
 
@@ -156,9 +154,9 @@ for i = 1:num_manif
 end
 
 figure(101)
-legend('Earth','Moon','L1','Halo','nominal manif.','powered manif.')
+legend('Halo','nominal manif.','powered manif.')
 figure(102)
-legend('Earth','Moon','L1','Halo','nominal manif.','powered manif.')
+legend('Halo','nominal manif.','powered manif.')
 
 
 %% Plot
