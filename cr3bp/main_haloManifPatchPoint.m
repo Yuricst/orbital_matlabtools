@@ -35,8 +35,6 @@ lp = 1;
 northsouth = 1;  % n = 1 (southern) or 3 (northern)
 % ... choose out-of-plane altitude of halo-orbit [km]
 Az_km = 26000; % 0.01 / 100 / 200 / 8000 / 26000
-% analytical 3rd order solution
-fprintf('Create analytical 3rd order solution...\n');
 % construct Halo orbit
 [X0_halo1,Thalo1,stm_T2_halo1,~] = ...
     constructhaloX0(mu,Lstar,phi,lp,northsouth,Az_km);
@@ -229,7 +227,7 @@ for i = 1:num_manif
     hold on
     % plot manifolds
     plot(manif(i).rr_s_p(:,1),manif(i).rr_s_p(:,2),'-m');
-    plot(manif(i).rr_s_m(:,1),manif(i).rr_s_m(:,2),'-g');
+    plot(manif(i).rr_s_m(:,1),manif(i).rr_s_m(:,2),'-m');
     % plot cloest approach of manifolds
     plot(manif(i).rr_s_p(manif(i).rr_minIndx_s_p,1),manif(i).rr_s_p(manif(i).rr_minIndx_s_p,2),'xb');
     grid on;
@@ -239,7 +237,7 @@ for i = 1:num_manif
     figure(102)
     % plot manifolds
     plot3(manif(i).rr_s_p(:,1),manif(i).rr_s_p(:,2),manif(i).rr_s_p(:,3),'-m');
-    plot3(manif(i).rr_s_m(:,1),manif(i).rr_s_m(:,2),manif(i).rr_s_m(:,3),'-g');
+    plot3(manif(i).rr_s_m(:,1),manif(i).rr_s_m(:,2),manif(i).rr_s_m(:,3),'-m');
     hold on
     % plot cloest approach of manifolds
     plot3(manif(i).rr_s_p(manif(i).rr_minIndx_s_p,1),manif(i).rr_s_p(manif(i).rr_minIndx_s_p,2),...
@@ -287,7 +285,8 @@ plot(manif(best_rrManif_s_p_indx).rr_s_p(manif(best_rrManif_s_p_indx).rr_minIndx
 % 3D plot of manifolds
 figure(102)
 hold on
-plot3(manif(best_rrManif_s_p_indx).rr_s_p(:,1),manif(best_rrManif_s_p_indx).rr_s_p(:,2),manif(best_rrManif_s_p_indx).rr_s_p(:,3),'-c');
+plot3(manif(best_rrManif_s_p_indx).rr_s_p(:,1),manif(best_rrManif_s_p_indx).rr_s_p(:,2),...
+    manif(best_rrManif_s_p_indx).rr_s_p(:,3),'-c');
 hold on
 plot3(manif(best_rrManif_s_p_indx).X0(1),manif(best_rrManif_s_p_indx).X0(2),...
     manif(best_rrManif_s_p_indx).X0(3),'xc','MarkerSize',6,'LineWidth',1.5); 
