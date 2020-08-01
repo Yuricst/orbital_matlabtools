@@ -68,7 +68,7 @@ vv(:,3) = y(:,6)';
                 dir1 = -1;
             end
         elseif strcmp(PS1,'U2')
-            val1 = y(1,1)>=1+mu && y(2,1)<0;
+            val1 = y(1,1)<=1-mu && y(2,1)<0;
             % direction (depends on stable or unstable manifold)
             if Tmax < 0 % stable manifold
                 dir1 = -1;
@@ -76,7 +76,7 @@ vv(:,3) = y(:,6)';
                 dir1 = 1;
             end
         elseif strcmp(PS1,'U3')
-            val1 = y(1,1)>=1+mu && y(2,1)>0;
+            val1 = y(1,1)>=1-mu && y(2,1)>0;
             % direction (depends on stable or unstable manifold)
             if Tmax < 0 % stable manifold
                 dir1 = 1;
@@ -103,7 +103,7 @@ vv(:,3) = y(:,6)';
                     dir2 = -1;
                 end
             elseif strcmp(PS2,'U2')
-                val2 = y(1,1)>=1+mu && y(2,1)<0;
+                val2 = y(1,1)<=1-mu && y(2,1)<0;
                 % direction (depends on stable or unstable manifold)
                 if Tmax < 0 % stable manifold
                     dir2 = -1;
@@ -111,7 +111,7 @@ vv(:,3) = y(:,6)';
                     dir2 = 1;
                 end
             elseif strcmp(PS2,'U3')
-                val2 = y(1,1)>=1+mu && y(2,1)>0; 
+                val2 = y(1,1)>=1-mu && y(2,1)>0; 
                 % direction (depends on stable or unstable manifold)
                 if Tmax < 0 % stable manifold
                     dir2 = 0;

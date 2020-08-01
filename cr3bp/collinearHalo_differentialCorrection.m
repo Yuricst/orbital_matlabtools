@@ -71,7 +71,7 @@ while residue_DC > residualtol
     fprintf('Differential correction iteration %d\n',count);
     % propagate
     [rr,vv,time,stmcell] = ...
-        propagate_state_et_STM_nested(mu,X0_DC,Thalf,nsteps,'on',reltol,abstol);
+        propagate_state_et_STM_nested(mu,X0_DC,2*Thalf,nsteps,'on',reltol,abstol);
     % check final residuals dvx and dvz
     residual_vec = [vv(length(time), 1);
                     vv(length(time), 3)];

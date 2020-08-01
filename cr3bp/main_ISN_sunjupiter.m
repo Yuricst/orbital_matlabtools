@@ -1,32 +1,13 @@
-%% main - Halo path point of manifolds
-% Construct Halo, then analyze with angular momentum
-% Yuri Shimane, 2020/04/17
+%% Sun-Jupiter for ITN
+% Yuri Shimane, 2020/05/23
 
-% house keep
-clear; 
-% close all;
-% or...
-figure(1)
-clf
-figure(2)
-clf
-figure(3)
-clf
-figure(5)
-clf
-figure(102)
-clf
-figure(101)
-clf
-%
-clc;
-tic;
+% house keeping
+clear; close all; clc;
 
 % define CR3BP parameter
-defineParam_EarthMoon;
-%defineParam_SunEarth;
+defineParam_SunJupiter;
 
-%% Halo construction (orbit 1)
+%% Halo construction
 % ... choose in-plane phase angle
 phi = 0;
 % ... choose collinear Lagrangan point (1,2, or 3)
@@ -34,7 +15,7 @@ lp = 1;
 % ... choose northern or southern family
 northsouth = 1;  % n = 1 (southern) or 3 (northern)
 % ... choose out-of-plane altitude of halo-orbit [km]
-Az_km = 26000; % 0.01 / 100 / 200 / 8000 / 26000
+Az_km = 52000; %43800 is closest approach [Rausch 2005]
 % analytical 3rd order solution
 fprintf('Create analytical 3rd order solution...\n');
 % construct Halo orbit
@@ -55,69 +36,6 @@ grid on;
 xlabel('x'); ylabel('y'); zlabel('z');
 title(['Earth-Moon Halo, Az = ',num2str(Az_km),' [km]']);
 
-%% Compute angular momentum
-% compute angular momentum vector
-hvect1 = zeros(3,length(time_halo1/Thalo1));
-hnorm1 = zeros(length(time_halo1/Thalo1),1);
-for i = 1:length(time_halo1/Thalo1)
-    rtmp = rr_halo1(i,:)';
-    vtmp = vv_halo1(i,:)';
-    htmp = cross(rtmp, vtmp);
-    hvect1(:,i) = htmp;  
-    hnorm1(i,1) = norm(hvect1(:,i));
-end
-
-figure(2)
-hold on
-plot(time_halo1/Thalo1,hnorm1,'-');
-title('Halo h')
-grid on;
-xlabel('time/period'); ylabel('h');
-
-figure(3)
-subplot(3,1,1)
-hold on
-plot(time_halo1/Thalo1,hvect1(1,:),'-b');
-grid on;
-xlabel('time/period'); ylabel('hx');
-subplot(3,1,2)
-hold on
-plot(time_halo1/Thalo1,hvect1(2,:),'-b');
-grid on;
-xlabel('time/period'); ylabel('hy');
-subplot(3,1,3)
-hold on
-plot(time_halo1/Thalo1,hvect1(3,:),'-b');
-grid on;
-xlabel('time/period'); ylabel('hz');
-
-% X-Y plot of Halo
-figure(101)
-hold on
-% plot primaries
-plot(-mu,0,'^k');
-plot(1-mu,0,'vk');
-plot(LP(lp,1),LP(lp,2),'xk');
-% plot halos
-plot(rr_halo1(:,1),rr_halo1(:,2),'-b');
-grid on;
-xlabel('x'); ylabel('y');
-
-% 3D plot of Halo
-figure(102)
-% plot primaries
-plot3(-mu,0,0,'^k');
-hold on
-plot3(1-mu,0,0,'vk');
-hold on
-plot3(LP(lp,1),LP(lp,2),LP(lp,3),'xk');
-hold on
-% plot halos
-plot3(rr_halo1(:,1),rr_halo1(:,2),rr_halo1(:,3),'-b');
-hold on
-grid on;
-xlabel('x'); ylabel('y');
-
 
 %% Construct manifolds
 disp('Constructing manifolds...')
@@ -125,7 +43,7 @@ disp('Constructing manifolds...')
 [M1,eigval1,eigvec1] = constructMonodromy(stm_T2_halo1);
 % stable/unstable vector (normalized)
 Yu = eigvec1(:,1)/norm(eigvec1(:,1));
-Ys = eigvec1(:,2)/norm(eigvec1(:,2));
+Ys = eigvec1(:,2)/norm(eigvec1(:,2));   % NEED CHECKING!
 % perturbation of state
 epsobj = 1e-6;  % eps objective
 % eps factor for linear approximated initial guess
@@ -314,6 +232,10 @@ subplot(3,1,2)
 xline(time_halo1(bestpatch_indx)/Thalo1,'--r');
 subplot(3,1,3)
 xline(time_halo1(bestpatch_indx)/Thalo1,'--r');
+
+
+
+
 
 
 

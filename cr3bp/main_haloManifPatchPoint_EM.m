@@ -1,4 +1,4 @@
-%% main - Halo path point of manifolds
+%% main - Halo path point of manifolds EM
 % Construct Halo, then analyze with angular momentum
 % Yuri Shimane, 2020/04/17
 
@@ -34,7 +34,7 @@ lp = 1;
 % ... choose northern or southern family
 northsouth = 1;  % n = 1 (southern) or 3 (northern)
 % ... choose out-of-plane altitude of halo-orbit [km]
-Az_km = 26000; % 0.01 / 100 / 200 / 8000 / 26000
+Az_km = 15000; %43800 is closest approach [Rausch 2005]
 % analytical 3rd order solution
 fprintf('Create analytical 3rd order solution...\n');
 % construct Halo orbit
@@ -125,7 +125,7 @@ disp('Constructing manifolds...')
 [M1,eigval1,eigvec1] = constructMonodromy(stm_T2_halo1);
 % stable/unstable vector (normalized)
 Yu = eigvec1(:,1)/norm(eigvec1(:,1));
-Ys = eigvec1(:,2)/norm(eigvec1(:,2));
+Ys = eigvec1(:,2)/norm(eigvec1(:,2));   % NEED CHECKING!
 % perturbation of state
 epsobj = 1e-6;  % eps objective
 % eps factor for linear approximated initial guess
@@ -280,8 +280,10 @@ hold on
 plot(manif(best_rrManif_s_p_indx).rr_s_p(:,1),manif(best_rrManif_s_p_indx).rr_s_p(:,2),'-c');
 plot(manif(best_rrManif_s_p_indx).X0(1),manif(best_rrManif_s_p_indx).X0(2),...
     'xc','MarkerSize',6,'LineWidth',1.5); 
-plot(manif(i).rr_s_p(manif(i).rr_minIndx_s_p,1),manif(i).rr_s_p(manif(i).rr_minIndx_s_p,2),...
+plot(manif(best_rrManif_s_p_indx).rr_s_p(manif(best_rrManif_s_p_indx).rr_minIndx_s_p,1),...
+     manif(best_rrManif_s_p_indx).rr_s_p(manif(best_rrManif_s_p_indx).rr_minIndx_s_p,2),...
     '^c','MarkerSize',6,'LineWidth',1.5); 
+axis equal;
 
 % 3D plot of manifolds
 figure(102)
@@ -291,12 +293,16 @@ hold on
 plot3(manif(best_rrManif_s_p_indx).X0(1),manif(best_rrManif_s_p_indx).X0(2),...
     manif(best_rrManif_s_p_indx).X0(3),'xc','MarkerSize',6,'LineWidth',1.5); 
 hold on
-plot3(manif(i).rr_s_p(manif(i).rr_minIndx_s_p,1),manif(i).rr_s_p(manif(i).rr_minIndx_s_p,2),...
-        manif(i).rr_s_p(manif(i).rr_minIndx_s_p,3),'^c','MarkerSize',6,'LineWidth',1.5); 
-    % print result location
+plot3(manif(best_rrManif_s_p_indx).rr_s_p(manif(best_rrManif_s_p_indx).rr_minIndx_s_p,1),...
+      manif(best_rrManif_s_p_indx).rr_s_p(manif(best_rrManif_s_p_indx).rr_minIndx_s_p,2),...
+      manif(best_rrManif_s_p_indx).rr_s_p(manif(best_rrManif_s_p_indx).rr_minIndx_s_p,3),...
+      '^c','MarkerSize',6,'LineWidth',1.5); 
+axis equal;
+
+% print result location state for patching with manifold
 fprintf('Manifold patch point:\n   %1.8f  %1.8f  %1.8f\n   %1.8f  %1.8f  %1.8f\n',...
-    manif(i).rr_s_p(manif(i).rr_minIndx_s_p,1),...
-    manif(i).vv_s_p(manif(i).vv_minIndx_s_p,1);
+    manif(best_rrManif_s_p_indx).rr_s_p(manif(best_rrManif_s_p_indx).rr_minIndx_s_p,:),...
+    manif(best_rrManif_s_p_indx).vv_s_p(manif(best_rrManif_s_p_indx).rr_minIndx_s_p,:));
 
     
 %% find corresponding location on the halo
